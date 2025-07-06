@@ -1,102 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+    <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Webform</title>
-
-</head>
-
-<body>
+    <title>Webform with Preview & Validation</title>
     <style>
-            /* Style inputs with type="text", select elements and textareas */
-    input[type=text], select, textarea {
-        width: 100%; /* Full width */
-        padding: 12px; /* Some padding */ 
-        border: 1px solid #ccc; /* Gray border */
-        border-radius: 4px; /* Rounded borders */
-        box-sizing: border-box; /* Make sure that padding and width stays in place */
-        margin-top: 6px; /* Add a top margin */
-        margin-bottom: 16px; /* Bottom margin */
-        resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
-    }
-    
-    /* Style the submit button with a specific background color etc */
-    input[type=submit] {
+        input[type=text],
+        select,
+        textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        resize: vertical;
+        }
+
+        input[type=submit] {
         background-color: #04AA6D;
         color: white;
         padding: 12px 20px;
         border: none;
         border-radius: 4px;
         cursor: pointer;
-    }
-    
-    /* When moving the mouse over the submit button, add a darker green color */
-    input[type=submit]:hover {
+        }
+
+        input[type=submit]:hover {
         background-color: #45a049;
-    }
-    
-    /* Add a background color and some padding around the form */
-    .container {
+        }
+
+        .container {
         border-radius: 5px;
         background-color: #f2f2f2;
         padding: 20px;
-    } 
+        }
 
+        .error {
+        color: red;
+        font-size: 0.9em;
+        }
+
+        .preview {
+        background-color: #e6f7ff;
+        padding: 15px;
+        margin-top: 20px;
+        border: 1px solid #b3d7ff;
+        border-radius: 5px;
+        }
     </style>
+    </head>
 
-
+    <body>
     <h1>Contact Us</h1>
     <div class="container">
-        <form action="action_page.php">
-    
+        <form id="contactForm" onsubmit="return validateForm(event)">
         <label for="fname">Name</label>
         <input type="text" id="fname" name="Name" placeholder="Your name..">
+        <div id="nameError" class="error"></div>
 
         <label for="email">Email</label>
-        <input type="text" id="email" name="Email" placeholder="please enter your email..">
-        
+        <input type="text" id="email" name="Email" placeholder="Please enter your email..">
+        <div id="emailError" class="error"></div>
 
         <label for="phone">Phone Number</label>
-        <input type="text" id="phone" name="Phone Number" placeholder="enter your Phone Number.">
-                
+        <input type="text" id="phone" name="Phone" placeholder="Enter your phone number.">
+        <div id="phoneError" class="error"></div>
 
-
-
-    
         <label for="message">Message</label>
         <textarea id="message" name="message" placeholder="Write something.." style="height:200px"></textarea>
+        <div id="messageError" class="error"></div>
 
         <p>Preferred Contact Method:</p>
+        <label><input type="radio" name="contact" value="Email" required> Email</label>
+        <label><input type="radio" name="contact" value="Phone"> Phone</label>
+        <label><input type="radio" name="contact" value="Both"> Both</label><br><br>
 
-            <label>
-            <input type="radio" name="contact" value="Email" required>
-            Email
-            </label>
-            
-            <label>
-            <input type="radio" name="contact" value="Phone">
-            Phone
-            </label>
-            
-            <label>
-            <input type="radio" name="contact" value="Both">
-            Both
-            </label><br>
-        
-
-        <br><label for="Inquiry"> Inquiry Type</label>
+        <label for="Inquiry">Inquiry Type</label>
         <select id="Inquiry" name="Inquiry">
             <option value="Grades">Grades</option>
             <option value="Modules">Modules</option>
             <option value="Other">Other</option>
         </select>
-        
-        <input type="submit" value="Submit">
-    
-        </form>
-    </div> 
 
-</body>
-    
+        <input type="submit" value="Preview">
+        </form>
+
+        <div id="preview" class="preview" style="display: none;">
+        <h3>Preview:</h3>
+        <p><strong>Name:</strong> <span id="previewName"></span></p>
+        <p><strong>Email:</strong> <span id="previewEmail"></span></p>
+        <p><strong>Phone:</strong> <span id="previewPhone"></span></p>
+        <p><strong>Message:</strong> <span id="previewMessage"></span></p>
+        <p><strong>Preferred Contact Method:</strong> <span id="previewContact"></span></p>
+        <p><strong>Inquiry Type:</strong> <span id="previewInquiry"></span></p>
+        </div>
+    </div>
+
+    <script>
+        function validateForm(event) {
+        event.preventDefault();
+
+        // Clear previous errors
+        document.getElementById("nameError").innerText = "";
+        document.getElementById("emailError").innerText = "";
+        document.getElementById("phoneError").innerText = "";
+        document.getElementById("messageError").innerText = "";
+
+        // Get form values
+        const name = document.getElementById("fname").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const message = document.getElementById("message").value.trim();
+        const contact = document.querySelector('input[name="contact"]:checked')?.value || "";
+        const inquiry = document.getElementById("Inquiry").value;
+
+        let valid = true;
+
+        // Validation checks
+        if (!name) {
+            document.getElementById("nameError").innerText = "Name is required.";
+            valid = false;
+        }
+
+        if (!email.match(/^\S+@\S+\.\S+$/)) {
+            document.getElementById("emailError").innerText = "Please enter a valid email address.";
+            valid = false;
+        }
+
+        if (!/^\d{10}$/.test(phone)) {
+            document.getElementById("phoneError").innerText = "Phone number must be 10 digits.";
+            valid = false;
+        }
+
+        if (!message) {
+            document.getElementById("messageError").innerText = "Message cannot be empty.";
+            valid = false;
+        }
+
+        if (!valid) return false;
+
+        // Fill preview data
+        document.getElementById("previewName").innerText = name;
+        document.getElementById("previewEmail").innerText = email;
+        document.getElementById("previewPhone").innerText = phone;
+        document.getElementById("previewMessage").innerText = message;
+        document.getElementById("previewContact").innerText = contact;
+        document.getElementById("previewInquiry").innerText = inquiry;
+
+        // Show preview
+        document.getElementById("preview").style.display = "block";
+
+        return false; // prevent actual form submission
+        }
+    </script>
+    </body>
+
+    </html>
