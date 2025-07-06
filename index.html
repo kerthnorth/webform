@@ -4,8 +4,13 @@
     <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Webform with Preview & Validation</title>
+    <!-- This is The name of my webpage, it will be displayed in my or your search bar when this program is ran.  -->
+    <title>Webform</title>
+
+    <!-- This section below contains my styling design, This ultimately determines how the program will look. -->
     <style>
+        /*Belown I am defining how the fill in section should look like, I am stating that the box shoud have circula edges -->*/
+        /*i have also given the user the ability to modify their text are vertically to fit the screen or needs*/
         input[type=text],
         select,
         textarea {
@@ -18,7 +23,7 @@
         margin-bottom: 16px;
         resize: vertical;
         }
-
+        /*This below section will simply style my submit button, it can be changed to whatever color that the user wants. */
         input[type=submit] {
         background-color: #04AA6D;
         color: white;
@@ -28,6 +33,7 @@
         cursor: pointer;
         }
 
+        /*This line of code is responsible for what should happen if we hover oner our submit button. */
         input[type=submit]:hover {
         background-color: #45a049;
         }
@@ -37,12 +43,13 @@
         background-color: #f2f2f2;
         padding: 20px;
         }
-
+        /*The below code nis styling for the error message when user does not enter all the required fields. */
         .error {
         color: red;
         font-size: 0.9em;
         }
 
+        /*The below simply handles what my preview page will look like */
         .preview {
         background-color: #e6f7ff;
         padding: 15px;
@@ -54,8 +61,15 @@
     </head>
 
     <body>
+
+    <!-- 
+        /*This is the class that will handle my name collection
+        All fields below this follwo the same logic.
+        They have error messages pre-assigned to them when a user does not enter the required field*/ -->
+
     <h1>Contact Us</h1>
     <div class="container">
+
         <form id="contactForm" onsubmit="return validateForm(event)">
         <label for="fname">Name</label>
         <input type="text" id="fname" name="Name" placeholder="Your name..">
@@ -85,9 +99,11 @@
             <option value="Other">Other</option>
         </select>
 
-        <input type="submit" value="Preview">
+        <input type="submit" value="submit">
         </form>
 
+        <!-- This is the part of my code that handles my preview section.
+        It fetches the information that the user has entered and then returns them in the preview space. -->
         <div id="preview" class="preview" style="display: none;">
         <h3>Preview:</h3>
         <p><strong>Name:</strong> <span id="previewName"></span></p>
@@ -99,17 +115,20 @@
         </div>
     </div>
 
+    <!-- Below is my JS part of the code
+    This part acts as the backbone of the website to connect various tools together. -->
     <script>
         function validateForm(event) {
         event.preventDefault();
 
-        // Clear previous errors
+        // Below i have set it so that the error messages that are displayed when you enter the wrong data are cleared
         document.getElementById("nameError").innerText = "";
         document.getElementById("emailError").innerText = "";
         document.getElementById("phoneError").innerText = "";
         document.getElementById("messageError").innerText = "";
 
-        // Get form values
+        // This is the part that will retrieve for data entered by the user
+        // The for data is displayed under preview for the 
         const name = document.getElementById("fname").value.trim();
         const email = document.getElementById("email").value.trim();
         const phone = document.getElementById("phone").value.trim();
@@ -119,7 +138,7 @@
 
         let valid = true;
 
-        // Validation checks
+        // These code block acts as your validtion blocks, this is to prevent users from submittinbg empty or missing form data
         if (!name) {
             document.getElementById("nameError").innerText = "Name is required.";
             valid = false;
@@ -142,7 +161,7 @@
 
         if (!valid) return false;
 
-        // Fill preview data
+        
         document.getElementById("previewName").innerText = name;
         document.getElementById("previewEmail").innerText = email;
         document.getElementById("previewPhone").innerText = phone;
@@ -150,10 +169,10 @@
         document.getElementById("previewContact").innerText = contact;
         document.getElementById("previewInquiry").innerText = inquiry;
 
-        // Show preview
+        // This is intructed to show the form preview when we click on submit. 
         document.getElementById("preview").style.display = "block";
 
-        return false; // prevent actual form submission
+        return false; 
         }
     </script>
     </body>
